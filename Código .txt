@@ -1,0 +1,119 @@
+package Trabalho;
+
+import java.util.Scanner;
+
+public class jogoDaVelha {
+
+    Scanner ler = new Scanner(System.in);
+    static String[][] tabela = {
+        {" ", " ", " "},
+        {" ", " ", " "},
+        {" ", " ", " "}
+    };
+    int linha;
+    int coluna;
+    char jogadorAtual = 'X';
+
+    public void mapa() {
+        while (true) {
+            System.out.printf("Vez do jogador %c.\n", jogadorAtual);
+            System.out.print("Digite a linha que quer inserir: ");
+            linha = ler.nextInt();
+            if (linha < 0 || linha > 2) {
+                System.out.println("Valores incorretos, valores entre 0 e 2.");
+                continue;
+            }
+            System.out.print("Digite a coluna que quer inserir: ");
+            coluna = ler.nextInt();
+            if (coluna < 0 || coluna > 2) {
+                System.out.println("Valores incorretos, valores entre 0 e 2.");
+                continue;
+            }
+
+            if (!tabela[linha][coluna].equals(" ")) {
+                System.out.println("Casa já preenchida, insira em outra posição.");
+                continue;
+            }
+
+            tabela[linha][coluna] = String.valueOf(jogadorAtual);
+            imprimirTabuleiro();
+
+            if (verificarVencedor()) {
+                System.out.printf("Jogador %c venceu o jogo!\n", jogadorAtual);
+                break;
+            }
+
+            if (verificarEmpate()) {
+                System.out.println("O jogo terminou empatado!");
+                break;
+            }
+
+            jogadorAtual = (jogadorAtual == 'X') ? 'O' : 'X'; // Troca entre os jogadores
+        }
+    }
+
+    public void imprimirTabuleiro() {
+        System.out.println("    0  |  1  |  2");
+        for (int i = 0; i < 3; i++) {
+            if (i > 0) {
+                System.out.println("  -----+-----+-----");
+            }
+            System.out.print(" " + i + " ");
+            for (int j = 0; j < 3; j++) {
+                System.out.print(tabela[i][j]);
+                if (j < 2) {
+                    System.out.print("   | ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public boolean verificarVencedor() {
+        // Verifica linhas
+        for (int i = 0; i < 3; i++) {
+            if (!tabela[i][0].equals(" ") && tabela[i][0].equals(tabela[i][1]) && tabela[i][1].equals(tabela[i][2])) {
+                return true;
+            }
+        }
+
+        // Verifica colunas
+        for (int i = 0; i < 3; i++) {
+            if (!tabela[0][i].equals(" ") && tabela[0][i].equals(tabela[1][i]) && tabela[1][i].equals(tabela[2][i])) {
+                return true;
+            }
+        }
+
+        // Verifica diagonais
+        if (!tabela[0][0].equals(" ") && tabela[0][0].equals(tabela[1][1]) && tabela[1][1].equals(tabela[2][2])) {
+            return true;
+        }
+        if (!tabela[0][2].equals(" ") && tabela[0][2].equals(tabela[1][1]) && tabela[1][1].equals(tabela[2][0])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean verificarEmpate() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (tabela[i][j].equals(" ")) {
+                    return false; // Ainda há espaços vazios
+                }
+            }
+        }
+        return true; // Todos os espaços preenchidos e sem vencedor
+    }
+
+    public void fimScanner() {
+        ler.close();
+    }
+
+    public static void main(String[] args) {
+        jogoDaVelha tabuleiro = new jogoDaVelha();
+        tabuleiro.mapa();
+        tabuleiro.fimScanner();
+    }
+}
